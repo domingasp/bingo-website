@@ -54,8 +54,17 @@ body {
 	padding: 0.5rem;
 	text-align: center;
 
-	font-size: 3rem;
+	font-size: 2rem;
 	font-weight: bold;
+}
+
+.bingo-h1__span {
+	display: inline-block;
+	margin-right: 0.5rem;
+	background-color: #FCBF49;
+
+	width: 2rem;
+	padding: 0.5rem;
 }
 
 .outer-main-div {
