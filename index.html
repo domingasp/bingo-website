@@ -1,21 +1,27 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta name = "viewport" content = "width = device-width, initial-scale = 1, maximum-scale = 1">
+        <link rel = "stylesheet" type = "text/css" href = "css/stylesheet.css">
+
         <title>Bingo!</title>
     </head>
     <body>
-        <h1>Bingo</h1>
+        <h1 class='bingo-h1'><span class='bingo-h1__span'>B</span><span class='bingo-h1__span'>I</span><span class='bingo-h1__span'>N</span><span class='bingo-h1__span'>G</span><span class='bingo-h1__span'>O</span></h1>
+        <div class='outer-main-div'>
+            <div class='bingo-grid-div' id='bingo_grid_id'>
+            </div>
 
-        <div id='bingo_grid_id'>
+            <button class='bingo-btn' onclick='generateNextNumber()'>Generate Number</button>
+
+            <p class='current-number-p' id='bingo_current_number_id'>--</p>
+            
+            <div class='bingo-last-five-div' id='bingo_last_five_id'>
+            </div>
+
+            <p class='numbers-called-p' >Numbers called: <span class='numbers-called-p__span' id='bingo_numbers_called_id'>0</span></p>
+            <button class='bingo-btn' onclick='newGame()'>New Game</button>
         </div>
-
-        <div id='bing_last_five_id'>
-        </div>
-
-        <p id='bingo_current_number_id'>--</p>
-        <p>Numbers called: <span id='bingo_numbers_called_id'>0</span></p>
-        <button onclick='generateNextNumber()'>Generate Number</button>
-        <button onclick='newGame()'>New Game</button>
 
         <script src="js/script.js"></script>
     </body>

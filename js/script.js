@@ -6,7 +6,7 @@ bingoNumbers = {'B': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,13, 14, 15],
 
 bingoString = 'BINGO';
 bingoGrid = document.getElementById('bingo_grid_id');
-bingoLast5Grid = document.getElementById('bing_last_five_id');
+bingoLast5Grid = document.getElementById('bingo_last_five_id');
 bingoCurrentNumber = document.getElementById('bingo_current_number_id');
 bingoNumbersCalled = document.getElementById('bingo_numbers_called_id');
 
@@ -17,8 +17,7 @@ for (letter of 'BINGO') {
     letterSpan = document.createElement('SPAN');
         
     letterSpan.innerHTML = letter;
-    letterSpan.style.display = 'inline-block';
-    letterSpan.style.width = '2rem';
+    letterSpan.classList.add('bingo-letter-span');
     letterSpan.id = 'letter_display_id_' + letter;
 
     bingoGrid.appendChild(letterSpan);
@@ -27,8 +26,7 @@ for (letter of 'BINGO') {
         newNumberSpan = document.createElement('SPAN');
         
         newNumberSpan.innerHTML = number;
-        newNumberSpan.style.display = 'inline-block';
-        newNumberSpan.style.width = '2rem';
+        newNumberSpan.classList.add('number-span');
         newNumberSpan.id = 'number_display_id_' + number;
 
         bingoGrid.appendChild(newNumberSpan);
@@ -42,9 +40,7 @@ for (i = 1; i < 6; i++) {
     lastNumber = document.createElement('SPAN');
 
     lastNumber.innerHTML = '#';
-    lastNumber.style.display = 'inline-block';
-    lastNumber.style.width = '2rem';
-    lastNumber.style.backgroundColor = 'cyan';
+    lastNumber.classList.add('last-5-span');
     lastNumber.id = 'last_number_displayed_id_' + i;
 
     bingoLast5Grid.appendChild(lastNumber);
@@ -60,7 +56,8 @@ function generateNextNumber() {
     if (bingoNumbers[letterGenerated].length > 0) {
         newNumber = getNextBingoNumber(0, bingoNumbers[letterGenerated].length)
         numberCalled = bingoNumbers[letterGenerated][newNumber];
-        document.getElementById('number_display_id_' + numberCalled).style.backgroundColor = 'green';
+        document.getElementById('number_display_id_' + numberCalled).style.backgroundColor = '#FCBF49';
+        document.getElementById('number_display_id_' + numberCalled).style.borderRadius = '100%';
         bingoCurrentNumber.innerHTML = letterGenerated + ' - ' + numberCalled;
         updateLast5Numbers(numberCalled);
             
@@ -72,7 +69,7 @@ function generateNextNumber() {
 
         if (bingoNumbers[letterGenerated].length == 0) {
             bingoString = bingoString.replace(letterGenerated, '');
-            document.getElementById('letter_display_id_' + letterGenerated).style.backgroundColor = 'magenta';
+            document.getElementById('letter_display_id_' + letterGenerated).style.backgroundColor = 'transparent';
         }
 
         bingoNumbersCalled.innerHTML = parseInt(bingoNumbersCalled.innerHTML) + 1;
@@ -96,7 +93,12 @@ function newGame() {
 
     // Reset styling of main grid
     for (cell of bingoGrid.children) {
-        cell.style.backgroundColor = 'transparent';
+        if (parseInt(cell.innerHTML)) {
+            cell.style.backgroundColor = 'transparent';
+            cell.style.borderRadius = '0.25rem';
+        } else {
+            cell.style.backgroundColor = '#06AED5';
+        }
     }
 
     // Reset values of last 5 numbers
@@ -107,9 +109,9 @@ function newGame() {
     // Reset display of current number
     bingoCurrentNumber.innerHTML = '--';
 
-    // Reset the bingo string
-    bingoString = 'BINGO';
-
     // Reset counter
     bingoNumbersCalled.innerHTML = '0';
+
+    // Reset the bingo string
+    bingoString = 'BINGO';
 }
