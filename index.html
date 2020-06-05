@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="assets/favicon.jpg">
 
         <link rel = "stylesheet" type = "text/css" href = "css/stylesheet.css">
@@ -34,7 +35,7 @@
                     <p class="bingo-game-options-div__current-number" id="current-number-id">--</p>
                     <button class="bingo-game-options-div__next-number-button" onclick="generateBingoNumber()" style="display: block;">Next Number</button>
                     
-                    <label class="bingo-game-options-div__label bingo-game-options-div__label--margin-top" >Enter a player's numbers (separate with space, e.g. 87 23 9 15):</label>
+                    <label class="bingo-game-options-div__label bingo-game-options-div__label--margin-top" >Enter a player's numbers (separate with space, e.g. 1 23 9 15):</label>
                     <input class="bingo-game-options-div__number-input" id="number-check-input-id" type="text" oninput="checkNumbers()"/>
                     <p class="bingo-game-options-div__number-result" id="number-check-result-id">No numbers entered.</p>
                 </div>
