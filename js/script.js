@@ -112,7 +112,7 @@ function checkNumbers() {
 
     if (isValid && bingoNumbersCalled.length > 0) {
         numberCheckResultText.innerHTML = "BINGO!";
-        numberCheckResultText.style.color = "green";
+        numberCheckResultText.style.color = "#358600";
         numberCheckResultText.style.fontWeight = 600;
     } else if (input.trim().length > 0) {
         numberCheckResultText.innerHTML = "Not bingo.";
