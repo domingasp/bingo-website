@@ -230,6 +230,10 @@ body {
 	}
 }
 
+button:hover, select:hover {
+	cursor: pointer;
+}
+
 button, input, select, option {
 	border: none;
 	outline: none;
