@@ -1,117 +1,167 @@
-bingoNumbers = {'B': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,13, 14, 15],
-                'I': [16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
-                'N': [31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45],
-                'G': [46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60],
-                'O': [61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75]}
+bingoGrid = document.getElementById("bingo-grid-id");
+currentNumberLabel = document.getElementById("current-number-id");
+latestNumbersDiv = document.getElementById("latest-numbers-div-id");
+numberCheckInput = document.getElementById("number-check-input-id");
+numberCheckResultText = document.getElementById("number-check-result-id");
 
-bingoString = 'BINGO';
-bingoGrid = document.getElementById('bingo_grid_id');
-bingoLast5Grid = document.getElementById('bingo_last_five_id');
-bingoCurrentNumber = document.getElementById('bingo_current_number_id');
-bingoNumbersCalled = document.getElementById('bingo_numbers_called_id');
+bingoNumbersLabels = [];
+latestNumbersLabels = [];
+bingoMaxNumber = 90;
 
-// Create elements for bingo numbers
+bingoNumbersCalled = [];
+bingoNumbersNotCalled = [];
 
-for (letter of 'BINGO') {
+isPlaying = false;
 
-    letterSpan = document.createElement('SPAN');
-        
-    letterSpan.innerHTML = letter;
-    letterSpan.classList.add('bingo-letter-span');
-    letterSpan.id = 'letter_display_id_' + letter;
 
-    bingoGrid.appendChild(letterSpan);
+// Create initial number grid
+for (i = 1; i < 91; i++) {
+    numberSpanNode = document.createElement("SPAN");
+    numberSpanNode.innerHTML = i;
 
-    for (number of bingoNumbers[letter]) {
-        newNumberSpan = document.createElement('SPAN');
-        
-        newNumberSpan.innerHTML = number;
-        newNumberSpan.classList.add('number-span');
-        newNumberSpan.id = 'number_display_id_' + number;
-
-        bingoGrid.appendChild(newNumberSpan);
-    }
-
-    bingoGrid.appendChild(document.createElement('BR'));
-}
-
-// Add last 5 number display
-for (i = 1; i < 6; i++) {
-    lastNumber = document.createElement('SPAN');
-
-    lastNumber.innerHTML = '#';
-    lastNumber.classList.add('last-5-span');
-    lastNumber.id = 'last_number_displayed_id_' + i;
-
-    bingoLast5Grid.appendChild(lastNumber);
-}
-
-function getNextBingoNumber(min, max) {
-    return Math.floor(Math.random() * (max - min)) + min;
-  }
-
-function generateNextNumber() {
-    letterGenerated = bingoString[getNextBingoNumber(0, bingoString.length)];
+    numberSpanNode.classList.add("bingo-grid-div__number-grid-div__number-span");
     
-    if (bingoNumbers[letterGenerated].length > 0) {
-        newNumber = getNextBingoNumber(0, bingoNumbers[letterGenerated].length)
-        numberCalled = bingoNumbers[letterGenerated][newNumber];
-        document.getElementById('number_display_id_' + numberCalled).style.backgroundColor = '#FCBF49';
-        document.getElementById('number_display_id_' + numberCalled).style.borderRadius = '100%';
-        bingoCurrentNumber.innerHTML = letterGenerated + ' - ' + numberCalled;
-        updateLast5Numbers(numberCalled);
-            
-        // Removes number from array
-        const index = bingoNumbers[letterGenerated].indexOf(numberCalled);
-        if (index > -1) {
-            bingoNumbers[letterGenerated].splice(index, 1);
-        }
+    bingoGrid.appendChild(numberSpanNode);
+    bingoNumbersLabels.push(numberSpanNode);
+}
 
-        if (bingoNumbers[letterGenerated].length == 0) {
-            bingoString = bingoString.replace(letterGenerated, '');
-            document.getElementById('letter_display_id_' + letterGenerated).style.backgroundColor = 'transparent';
-        }
 
-        bingoNumbersCalled.innerHTML = parseInt(bingoNumbersCalled.innerHTML) + 1;
+// Create latest 5 number labels
+for (i = 0; i < 5; i++) {
+    latestNumberSpanNode = document.createElement("SPAN");
+    latestNumberSpanNode.innerHTML = "#";
+
+    latestNumberSpanNode.classList.add("bingo-grid-div__latest-numbers-div__number-span");
+
+    latestNumbersDiv.appendChild(latestNumberSpanNode);
+    latestNumbersLabels.push(latestNumberSpanNode);
+}
+
+
+latestNumbersLabels.reverse()
+
+
+function generateBingoNumber() {
+    if (!isPlaying) {
+        document.getElementById("select-bingo-range-id").disabled = true;
+        bingoNumbersCalled = [];
+        bingoNumbersNotCalled = Array.from(Array(bingoMaxNumber).keys());
+        bingoNumbersNotCalled = shuffle(bingoNumbersNotCalled);
+        isPlaying = true;
+    }
+
+    if (bingoNumbersNotCalled.length > 0) {
+        indexOfNumber = bingoNumbersNotCalled.length - 1;
+
+        // Change span element
+        bingoNumbersLabels[bingoNumbersNotCalled[indexOfNumber]].style.backgroundColor = "#FCBF49";
+        currentNumberLabel.innerHTML = bingoNumbersLabels[bingoNumbersNotCalled[indexOfNumber]].innerHTML
+        updateLatestNumbers(bingoNumbersLabels[bingoNumbersNotCalled[indexOfNumber]].innerHTML);
+
+        // Add number to the correct array
+        bingoNumbersCalled.push(bingoNumbersNotCalled[indexOfNumber]);
+        bingoNumbersNotCalled.pop();
+
+        checkNumbers()
     }
 }
 
-function updateLast5Numbers(number) {
-    last5 = bingoLast5Grid.children
-    for (i = last5.length - 1; i > 0; i--) {
-        last5[i].innerHTML = last5[i-1].innerHTML;
-    }
-    last5[0].innerHTML = number;
+
+function resetBingoGame() {
+    isPlaying = false
+    bingoNumbersCalled.forEach(number => {
+        bingoNumbersLabels[number].style.backgroundColor = "white";
+    });
+    bingoNumbersCalled = [];
+    currentNumberLabel.innerHTML = "--";
+    updateLatestNumbers(0, true);
+    checkNumbers();
+    document.getElementById("select-bingo-range-id").disabled = false;
 }
 
-function newGame() {
-    bingoNumbers = {'B': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,13, 14, 15],
-                    'I': [16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
-                    'N': [31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45],
-                    'G': [46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60],
-                    'O': [61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75]}
 
-    // Reset styling of main grid
-    for (cell of bingoGrid.children) {
-        if (parseInt(cell.innerHTML)) {
-            cell.style.backgroundColor = 'transparent';
-            cell.style.borderRadius = '0.25rem';
+function updateLatestNumbers(newNumber = 0, resetLabels = false) {
+    for (i = 0; i < latestNumbersLabels.length - 1; i++) {
+        if (resetLabels) {
+            latestNumbersLabels[i].innerHTML = "#";
         } else {
-            cell.style.backgroundColor = '#06AED5';
+            latestNumbersLabels[i].innerHTML = latestNumbersLabels[i + 1].innerHTML;
         }
     }
 
-    // Reset values of last 5 numbers
-    for (cell of bingoLast5Grid.children) {
-        cell.innerHTML = '#';
+    if (resetLabels) {
+        latestNumbersLabels[latestNumbersLabels.length - 1].innerHTML = "#";
+    } else {
+        latestNumbersLabels[latestNumbersLabels.length - 1].innerHTML = newNumber;
+    }
+}
+
+
+function checkNumbers() {
+    input = numberCheckInput.value;
+    isValid = true;
+
+    inputNumbers = input.trim().split(' ');
+    for (i = 0; i < inputNumbers.length; i++) {
+        parsedNumber = parseInt(inputNumbers[i]);
+        if (!bingoNumbersCalled.includes(parsedNumber - 1)) {
+            isValid = false;
+            break;
+        }
     }
 
-    // Reset display of current number
-    bingoCurrentNumber.innerHTML = '--';
+    if (isValid && bingoNumbersCalled.length > 0) {
+        numberCheckResultText.innerHTML = "BINGO!";
+        numberCheckResultText.style.color = "green";
+        numberCheckResultText.style.fontWeight = 600;
+    } else if (input.trim().length > 0) {
+        numberCheckResultText.innerHTML = "Not bingo.";
+        numberCheckResultText.style.color = "#E63B2E";
+        numberCheckResultText.style.fontWeight = 600;
+    } else {
+        numberCheckResultText.innerHTML = "No numbers entered.";
+        numberCheckResultText.style.color = "#323232";
+        numberCheckResultText.style.fontWeight = 500;
+    }
+}
 
-    // Reset counter
-    bingoNumbersCalled.innerHTML = '0';
 
-    // Reset the bingo string
-    bingoString = 'BINGO';
+function setMaxBingoNumber(newValue) {
+    if (!isPlaying) {
+        bingoMaxNumber = parseInt(newValue);
+        
+        visibilityOf76To90(newValue == 90);
+    }
+}
+
+
+function visibilityOf76To90(isVisible) {
+    displaySetting = "none";
+    if (isVisible) {
+        displaySetting = "inline-block";
+    }
+
+    for (i = 75; i < bingoNumbersLabels.length; i++) {
+        bingoNumbersLabels[i].style.display = displaySetting;
+    }
+}
+
+
+function shuffle(array) {
+    var currentIndex = array.length, temporaryValue, randomIndex;
+  
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+  
+      // Pick a remaining element...
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+  
+      // And swap it with the current element.
+      temporaryValue = array[currentIndex];
+      array[currentIndex] = array[randomIndex];
+      array[randomIndex] = temporaryValue;
+    }
+  
+    return array;
 }

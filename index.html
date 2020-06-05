@@ -8,20 +8,37 @@
         <title>Bingo!</title>
     </head>
     <body>
-        <h1 class='bingo-h1'><span class='bingo-h1__span'>B</span><span class='bingo-h1__span'>I</span><span class='bingo-h1__span'>N</span><span class='bingo-h1__span'>G</span><span class='bingo-h1__span'>O</span></h1>
-        <div class='outer-main-div'>
-            <div class='bingo-grid-div' id='bingo_grid_id'>
+        <h1 class="bingo-h1"><span class="bingo-h1__span">B</span><span class="bingo-h1__span">I</span><span class="bingo-h1__span">N</span><span class="bingo-h1__span">G</span><span class="bingo-h1__span">O</span></h1>
+        <div class="outer-main-div">
+            <div class="bingo-grid-div">
+                <h2 class="bingo-grid-div__h2">Board:</h2>
+                <div class="bingo-grid-div__number-grid-div" id="bingo-grid-id">
+                </div>
+                <div class="bingo-grid-div__latest-numbers-div" id="latest-numbers-div-id">
+                    <span>Latest numbers:</span>
+                </div>
             </div>
 
-            <button class='bingo-btn' onclick='generateNextNumber()'>Generate Number</button>
+            <div class="bingo-game-options-div">
+                <h2 class="bingo-grid-div__h2">Controls:</h2>
+                <div class="bingo-game-options-div__main-div">
+                    <label class="bingo-game-options-div__label" for="select-bingo-range-id">Select number range:</label>
+                    <select class="bingo-game-options-div__select" onchange="setMaxBingoNumber(this.value)" name="select-bingo-range-id" id="select-bingo-range-id">
+                        <option value="75">1 - 75</option>
+                        <option value="90" selected>1 - 90</option>
+                    </select>
 
-            <p class='current-number-p' id='bingo_current_number_id'>--</p>
-            
-            <div class='bingo-last-five-div' id='bingo_last_five_id'>
+                    <button class="bingo-game-options-div__reset-button" onclick="resetBingoGame()" style="display: block;">Reset Bingo Board</button>
+
+                    <p class="bingo-game-options-div__current-number-label">Current Number:</p>
+                    <p class="bingo-game-options-div__current-number" id="current-number-id">--</p>
+                    <button class="bingo-game-options-div__next-number-button" onclick="generateBingoNumber()" style="display: block;">Next Number</button>
+                    
+                    <label class="bingo-game-options-div__label bingo-game-options-div__label--margin-top" >Enter a player's numbers (separate with space, e.g. 87 23 9 15):</label>
+                    <input class="bingo-game-options-div__number-input" id="number-check-input-id" type="text" oninput="checkNumbers()"/>
+                    <p class="bingo-game-options-div__number-result" id="number-check-result-id">No numbers entered.</p>
+                </div>
             </div>
-
-            <p class='numbers-called-p' >Numbers called: <span class='numbers-called-p__span' id='bingo_numbers_called_id'>0</span></p>
-            <button class='bingo-btn' onclick='newGame()'>New Game</button>
         </div>
 
         <script src="js/script.js"></script>
